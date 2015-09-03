@@ -10,14 +10,21 @@ import java.net.UnknownHostException;
 
 public class MsgClient {
     public static void main(String[] args) {
-        String host = "finger92.koding.io";
+        String host = "twood02.koding.io";
         int portnum = 5555;
 
+        if(args.length <= 1){
+            System.out.println("ERROR no enough parameters");
+            System.exit(-1); 
+        }
         try {
             Socket sock = new Socket(host, portnum);    //get the socketm and connet to the server
             PrintWriter out = new PrintWriter(sock.getOutputStream(), true);    //get printer
             out.println(args[args.length-2]);   //send messages
             out.println(args[args.length-1]);
+            
+            out.close();
+            sock.close();
             
         } catch(Exception e) {
             System.out.println("Socket connection failed, Exception:"+e);

@@ -16,13 +16,13 @@
 
 int main(int argc, char ** argv)
 {
-        if(argc == 1)
+        if(argc <= 2)
         {
-            perror("ERROR parameters");
+            printf("ERROR no enough parameters\n");
             exit(-1);
         }
         char* server_port = "5555";
-        char* server_ip = "finger92.koding.io";
+        char* server_ip = "twood02.koding.io";
 
         struct addrinfo hints, *res;
         int sockfd, rv, rc;
@@ -65,6 +65,7 @@ int main(int argc, char ** argv)
         if (rc == -1) 
         {
             perror("ERROR on connect");
+            close(rc);
             close(sockfd);
             exit(-1);
         }
@@ -78,6 +79,8 @@ int main(int argc, char ** argv)
         
         //free addrinfo 
         free(msg);
+        close(rc);
+        close(sockfd);
         freeaddrinfo(res); 
 
         printf("Done.\n");

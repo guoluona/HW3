@@ -9,7 +9,7 @@ if len(sys.argv) <= 2:
     print('ERROR no enough parameters');
     sys.exit(-1);
 
-host = "finger92.koding.io";
+host = "twood02.koding.io";
 portnum = 5555;
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM);   #get socket
