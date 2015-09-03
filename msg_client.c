@@ -77,7 +77,7 @@ int main(int argc, char ** argv)
         send(sockfd, msg, strlen(msg)+1, 0);
         
         //free addrinfo 
-        
+        free(msg);
         freeaddrinfo(res); 
 
         printf("Done.\n");
