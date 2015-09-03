@@ -14,9 +14,9 @@ public class MsgClient {
         int portnum = 5555;
 
         try {
-            Socket sock = new Socket(host, portnum);
-            PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
-            out.println(args[args.length-2]);
+            Socket sock = new Socket(host, portnum);    //get the socketm and connet to the server
+            PrintWriter out = new PrintWriter(sock.getOutputStream(), true);    //get printer
+            out.println(args[args.length-2]);   //send messages
             out.println(args[args.length-1]);
             
         } catch(Exception e) {
