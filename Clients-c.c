@@ -20,7 +20,7 @@ hints.ai_protocol = 0;  // automatically choose protocol type
 
 //exit if loading is failed
 
-if((rv = getaddrinfo("52.22.177.248", "5555", &hints, &res))!=0)
+if((rv = getaddrinfo("52.20.93.141", "5555", &hints, &res))!=0)
 {
     fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
     exit(1);
@@ -53,13 +53,14 @@ if (rc == -1)
 
 //send messages
 
-char *temp = "zhouyi\\r\\nhi";
+char *msg = "Yi Zhou\nhi";
 
 // send data normally:
 
-send(sockfd, temp, sizeof temp, 0);
+send(sockfd, msg, strlen(msg)+1, MSG_OOB);
 
 //free addrinfo 
+
 freeaddrinfo(res); 
 
 }
