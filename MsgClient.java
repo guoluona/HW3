@@ -14,13 +14,15 @@ public class MsgClient {
         int portnum = 5555;
 
         try {
-            Socket sock = Socket(host, portnum);
+            Socket sock = new Socket(host, portnum);
+            PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+            out.println(args[args.length-2]);
+            out.println(args[args.length-1]);
+            
         } catch(Exception e) {
-            System.out.println("Socket connection failed, Exception:"+e.ToString());
+            System.out.println("Socket connection failed, Exception:"+e);
         }
-        PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
-        out.println(args[0]);
-        out.println(args[1]);
+       
 
     }
 }
