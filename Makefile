@@ -1,5 +1,5 @@
 default:
-	gcc -o msg_client.o msg_client.c
+	gcc -o msg_client msg_client.c
 
 clean:
-	rm -f  msg_client.o
+	rm -f  msg_client

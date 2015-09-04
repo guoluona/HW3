@@ -1,7 +1,7 @@
 // CS 6421 - Simple Message Board Client in C
 // Yi Zhou
 // Compile with: make
-// Run with: ./msg_client
+// Run with: ./msg_client Tom hello
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,32 +12,30 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <string.h>
-#define MAX_MSG_SIZE 20 //maximum length of messages
 
 int main(int argc, char ** argv)
 {
-        if(argc <= 2)
+        //exit if there are not enough arguements
+        if(argc <= 3)   
         {
-            printf("ERROR no enough parameters\n");
+            printf("ERROR, please input line arguements as host, username, message\n");
+            printf("e.g.: ./msg_client \"twood02.koding.com\" \"Chen\"  \"this is my message\"\n");
             exit(-1);
         }
+        
         char* server_port = "5555";
-        char* server_ip = "twood02.koding.io";
-
         struct addrinfo hints, *res;
-        int sockfd, rv, rc;
+        int sockfd, rv, rc, sd;
 
         memset(&hints, 0, sizeof hints);    //clean up memory space for ai
         hints.ai_family = AF_UNSPEC;     // look for both IPV4 and IPV6
         hints.ai_socktype = SOCK_STREAM; // set socket type to SOCK_STREAM
         hints.ai_protocol = 0;  // automatically choose protocol type
 
-         //load up address structs
-        
-        rv = getaddrinfo(server_ip, server_port, &hints, &res);
+        //load up address structs
+        rv = getaddrinfo(argv[1], server_port, &hints, &res);
         
         //exit if loading failed
-        
         if(rv==-1)
         {
             fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
@@ -45,39 +43,52 @@ int main(int argc, char ** argv)
         }
 
         // make a socket
-
         sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-        //exit if opening socket failed
-
+        //exit if open socket failed
         if (sockfd == -1) 
         {
-            perror("ERROR opening socket");
+            perror("ERROR, open socket failed");
+            freeaddrinfo(res);
             exit(-1);
         }
 
         //connect to the server
-
         rc = connect(sockfd, res->ai_addr, res->ai_addrlen);
 
-        //exit if the connection is failed 
-
+        //exit if connect failed 
         if (rc == -1) 
         {
-            perror("ERROR on connect");
-            close(rc);
+            perror("ERROR, connect failed");
             close(sockfd);
+            freeaddrinfo(res);
             exit(-1);
         }
 
-        //send messages
-        char* msg = malloc(MAX_MSG_SIZE * sizeof(char));
-        strcpy(msg,argv[argc-2]);
-        strcat(msg,"\n");   //merge messages
-        strcat(msg,argv[argc-1]);
-        send(sockfd, msg, strlen(msg)+1, 0);
+        //merge messages
+        char* msg = malloc((strlen(argv[2])+strlen(argv[3])) * sizeof(char));
+        strcpy(msg,argv[2]);
+        strcat(msg,"\n");  
+        strcat(msg,argv[3]);
         
-        //free addrinfo 
+        //send messages
+        sd = send(sockfd, msg, strlen(msg)+1, 0);
+        
+        //exit if send failed 
+        if (sd == -1) 
+        {
+            perror("ERROR, send failed");
+            free(msg);
+            close(rc);
+            close(sockfd);
+            freeaddrinfo(res);
+            exit(-1);
+        }else if (sd != strlen(msg) + 1)
+        {
+            printf("send incomplete messages");
+        }
+        
+        //free and close operation
         free(msg);
         close(rc);
         close(sockfd);
