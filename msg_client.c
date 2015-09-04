@@ -26,6 +26,14 @@ int main(int argc, char ** argv)
         char* server_port = "5555";
         struct addrinfo hints, *res;
         int sockfd, rv, rc, sd;
+        
+        //test if there is enough space to malloc merged messages to send
+        char* msg = malloc((strlen(argv[2])+strlen(argv[3])) * sizeof(char));
+        if (msg == NULL)
+        {
+            printf("messages are too long, try to limit their size");
+            exit(-1);
+        }
 
         memset(&hints, 0, sizeof hints);    //clean up memory space for ai
         hints.ai_family = AF_UNSPEC;     // look for both IPV4 and IPV6
@@ -36,7 +44,7 @@ int main(int argc, char ** argv)
         rv = getaddrinfo(argv[1], server_port, &hints, &res);
         
         //exit if loading failed
-        if(rv==-1)
+        if (rv==-1)
         {
             fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
             exit(-1);
@@ -66,7 +74,6 @@ int main(int argc, char ** argv)
         }
 
         //merge messages
-        char* msg = malloc((strlen(argv[2])+strlen(argv[3])) * sizeof(char));
         strcpy(msg,argv[2]);
         strcat(msg,"\n");  
         strcat(msg,argv[3]);
