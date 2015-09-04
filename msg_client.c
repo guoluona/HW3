@@ -1,7 +1,7 @@
 // CS 6421 - Simple Message Board Client in C
 // Yi Zhou
 // Compile with: make
-// Run with: ./msg_client Tom hello
+// Run with: ./msg_client "twood02.koding.com" "Chen" "this is my message"
 
 #include <stdlib.h>
 #include <stdio.h>
