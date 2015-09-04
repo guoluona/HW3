@@ -81,26 +81,21 @@ int main(int argc, char ** argv)
         //send messages
         sd = send(sockfd, msg, strlen(msg)+1, 0);
         
+        //free and close
+        close(rc);
+        close(sockfd);
+        freeaddrinfo(res);
+        free(msg);
+
         //exit if send failed 
         if (sd == -1) 
         {
             perror("ERROR, send failed");
-            free(msg);
-            close(rc);
-            close(sockfd);
-            freeaddrinfo(res);
             exit(-1);
-        }else if (sd != strlen(msg) + 1)
+        }else
         {
-            printf("send incomplete messages");
+            printf("Done.\n");
         }
         
-        //free and close operation
-        free(msg);
-        close(rc);
-        close(sockfd);
-        freeaddrinfo(res); 
-
-        printf("Done.\n");
         return 0;
 }
