@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
         rv = getaddrinfo(argv[1], server_port, &hints, &res);
         
         //exit if loading failed
-        if (rv==-1)
+        if (rv != 0)
         {
             fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
             exit(-1);
