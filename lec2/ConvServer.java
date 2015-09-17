@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.Float;
+import java.lang.Double;
 
 public class ConvServer {
 
