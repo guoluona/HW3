@@ -21,9 +21,9 @@ import java.util.HashMap;
 public class ProxyServer {
     
     // server ip address
-    static String lbsConvb = "127.0.0.1";
-    static String bConvin = "127.0.0.1";
-    static String bConvg = "127.0.0.1";
+    static String lbsConvb = "127.0.0.1 5553";
+    static String bConvin = "127.0.0.1 5554";
+    static String bConvg = "127.0.0.1 5555";
     static int NUMOFNODES = 4;
     /* convertion table
     *   lbs  b  in  g
@@ -40,12 +40,20 @@ public class ProxyServer {
     static String[] getLable = {"lbs","b","in","g"};
     static HashMap<String, Integer> getNum;
     static HashMap<String, String> getServer;
+    
     /*
      * use BFS to visit all the nodes to find a convertion path
+     * return the last node containing the last step of unit to 
+     * complete convertion 
      */
-    public static void conv(int s, int e, double num){
-        if(endSearch(s, e)){
-            return;    
+    public static Node findPath(int s, int e){
+        if(convTable[s][e] == 1){
+            Node snode = new Node();
+            snode.setNum(s);
+            Node enode = new Node();
+            enode.setNum(e);
+            enode.setPre(snode);
+            return enode;    
         }
         //create a queue to visit all the nodes
         Queue<Node> queue = new LinkedList<Node>();
@@ -59,7 +67,12 @@ public class ProxyServer {
             Node fnode = queue.poll();
 			int head = fnode.getNum();
 			int headDist = dist.get(head);
-			if(convTable[head][e] == 1) return;
+			if(convTable[head][e] == 1){
+			    Node enode = new Node();
+				enode.setNum(e);
+				enode.setPre(fnode);
+			    return enode;
+			}
 			for(int i = 0;i < NUMOFNODES;i++){
 				if(convTable[head][i] == 1 && !dist.containsKey(i)){
 				    Node cnode = new Node();
@@ -70,14 +83,8 @@ public class ProxyServer {
 				}
 			}
 		}
+		return null;
     }   
-    
-    public static boolean endSearch(int s, int e){
-        if(convTable[s][e] == 1){
-            return true;
-        }
-    	return false;
-    }
     
     /*
      * change lable to number in convTable
@@ -97,15 +104,17 @@ public class ProxyServer {
         getServer.put("g b", bConvg);
     }
     
-    public static void callServer(String msg, String host, int portnum) {
+    public static String callServer(String msg, String server) {
 
         Socket sock = null;
+        String userInput = null;
         try {
-            sock = new Socket(host, portnum);    //get the socket and connet to the server
+            String[] serverArg = server.split(" ");
+            sock = new Socket(serverArg[0], Integer.parseInt(serverArg[1]));    //get the socket and connet to the server
             BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));   //get reader
             PrintWriter out = new PrintWriter(sock.getOutputStream(), true);    //get printer
             out.println(msg + "\n");   //send messages
-            String userInput; 
+            
             if ((userInput = in.readLine()) == null) {  //get reply
                 System.out.println("Error reading message");
                 out.close();
@@ -122,7 +131,8 @@ public class ProxyServer {
             System.exit(-1); 
         }
 
-        System.out.println(msg + " sended.");
+        //System.out.println(msg + " sended.");
+        return userInput;
     }
     
     public static void process (Socket clientSocket) throws IOException {
@@ -142,16 +152,27 @@ public class ProxyServer {
             in.close();
             clientSocket.close();
         }
-
+    
         System.out.println("Received message: " + userInput);
         //--TODO: add your converting functions here, msg = func(userInput);
         init();
         String[] arg = userInput.split(" ");
-        try{
-            conv(getNum.get(arg[0]), getNum.get(arg[1]), Double.valueOf(arg[2]).doubleValue());
-        }catch(Exception e){
-            out.println("wrong input, program ended.");
+        int[] path = new int[NUMOFNODES];
+        int j = 0;
+       
+        Node node = findPath(getNum.get(arg[0]), getNum.get(arg[1]));
+        path[j] = node.getNum(); 
+        while(node.getPre() != null){
+            node = node.getPre();
+            j++;
+            path[j] = node.getNum();
         }
+        
+        String argNum = arg[2];
+        for(int i = j; i > 0; i--){
+            argNum = callServer(getLable[path[i]]+" "+getLable[path[i-1]]+" "+argNum, getServer.get(getLable[path[i]]+" "+getLable[path[i-1]]));
+        }
+            out.println(argNum);
         // close IO streams, then socket
         out.close();
         in.close();

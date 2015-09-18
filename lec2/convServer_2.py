@@ -12,7 +12,7 @@ import sys
 
 ## Function to process requests
 def process(conn):
-    conn.send("Welcome, you are connected to a Python-based server\n")
+    #conn.send("Welcome, you are connected to a Python-based server\n")
 
     # read userInput from client
     userInput = conn.recv(BUFFER_SIZE)
@@ -24,9 +24,9 @@ def process(conn):
     # TODO: add convertion function here, reply = func(userInput)
     mylist = userInput.split(" ")
     if mylist[0] == 'b':
-        conn.send(str(float(mylist[2]) * 0.2646)+'\n');
-    elif mylist[0] == 'lbs':
-        conn.send(str(float(mylist[2]) / 0.2646)+'\n');
+        conn.send(str(float(mylist[2]) * 6)+'\n');
+    elif mylist[0] == 'in':
+        conn.send(str(float(mylist[2]) / 6)+'\n');
     conn.close()
 
 

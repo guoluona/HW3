@@ -24,7 +24,7 @@ public class ConvServer {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
         /* Write a welcome message to the client */
-        out.println("Welcome, you are connected to a Java-based server");
+        // /out.println("Welcome, you are connected to a Java-based server");
 
         /* read and print the client's request */
         // readLine() blocks until the server receives a new line from client
