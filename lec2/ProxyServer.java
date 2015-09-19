@@ -135,6 +135,21 @@ public class ProxyServer {
         return userInput;
     }
     
+    public static boolean checkArg(String[] m){
+        if(!m[0].equals(m[1])){
+            for(int i = 0;i < getLable.length;i++){
+                if(m[0].equals(getLable[i])){
+                    for(int j = 0;j < getLable.length;j++){
+                        if(m[1].equals(getLable[j])){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
     public static void process (Socket clientSocket) throws IOException {
         // open up IO streams
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -159,20 +174,31 @@ public class ProxyServer {
         String[] arg = userInput.split(" ");
         int[] path = new int[NUMOFNODES];
         int j = 0;
-       
-        Node node = findPath(getNum.get(arg[0]), getNum.get(arg[1]));
-        path[j] = node.getNum(); 
-        while(node.getPre() != null){
-            node = node.getPre();
-            j++;
-            path[j] = node.getNum();
+        // Exception handler
+        if (arg.length != 3){
+            out.println("pls input 3 arguements. Usage: eg. b g 2 or g b 2");
+        }else if(!checkArg(arg)){
+            out.print("Wrong input. allowed input unit：");
+            for(int i = 0;i < getLable.length;i++){
+                out.print(getLable[i]+ " ");
+            }
+            out.print("\n");
+        }else{
+            // find path, complete convertion, send result
+            Node node = findPath(getNum.get(arg[0]), getNum.get(arg[1]));
+            path[j] = node.getNum(); 
+            while(node.getPre() != null){
+                node = node.getPre();
+                j++;
+                path[j] = node.getNum();
+            }
+            
+            String argNum = arg[2];
+            for(int i = j; i > 0; i--){
+                argNum = callServer(getLable[path[i]]+" "+getLable[path[i-1]]+" "+argNum, getServer.get(getLable[path[i]]+" "+getLable[path[i-1]]));
+            }
+                out.println(argNum);
         }
-        
-        String argNum = arg[2];
-        for(int i = j; i > 0; i--){
-            argNum = callServer(getLable[path[i]]+" "+getLable[path[i-1]]+" "+argNum, getServer.get(getLable[path[i]]+" "+getLable[path[i-1]]));
-        }
-            out.println(argNum);
         // close IO streams, then socket
         out.close();
         in.close();

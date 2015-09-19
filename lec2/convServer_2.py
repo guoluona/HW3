@@ -3,7 +3,8 @@
 #******************************************************************************
 #
 #  CS 6421 - Simple Conversation
-#  Execution:    python convServer.py portnum
+#  implement convertion between bananas and inches of bananas
+#  Execution:    python convServer_2.py portnum
 #
 #******************************************************************************
 
@@ -23,10 +24,17 @@ def process(conn):
     print "Received message: ", userInput
     # TODO: add convertion function here, reply = func(userInput)
     mylist = userInput.split(" ")
-    if mylist[0] == 'b':
-        conn.send(str(float(mylist[2]) * 6)+'\n');
-    elif mylist[0] == 'in':
-        conn.send(str(float(mylist[2]) / 6)+'\n');
+    # excption handler
+    if len(mylist) != 3:
+        conn.send('pls input 3 arguements. Usage: eg. b in 6 or in b 6\n')
+    elif mylist[0] == mylist[1] or mylist[0] != 'b' and mylist[0] != 'in' or mylist[1] != 'b' and mylist[1] != 'in':
+        conn.send('Wrong input. Usage: eg. b in 2 or in b 2\n');
+    else:
+        # send convertion result
+        if mylist[0] == 'b':
+            conn.send(str(float(mylist[2]) * 6)+'\n');
+        elif mylist[0] == 'in':
+            conn.send(str(float(mylist[2]) / 6)+'\n');
     conn.close()
 
 

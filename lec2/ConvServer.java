@@ -1,6 +1,7 @@
 /******************************************************************************
  *
  *  CS 6421 - Simple Conversation
+ *  implement convertion between bananas and grams of potassium
  *  Compilation:  javac ConvServer.java
  *  Execution:    java ConvServer port
  *
@@ -39,15 +40,21 @@ public class ConvServer {
         System.out.println("Received message: " + userInput);
         //--TODO: add your converting functions here, msg = func(userInput);
         String[] arg = userInput.split(" ");
-        try{
-            if(arg[0].equals("b")){
-                out.println(bToG(arg[2]));
+        if (arg.length != 3){
+            out.println("pls input 3 arguements. Usage: eg. b g 2 or g b 2");
+        }else if(!arg[0].equals("b") && !arg[0].equals("in") || !arg[1].equals("b") && !arg[1].equals("in")){
+            out.println("Wrong input. Usage: eg. b in 2 or in b 2");
+        }else{
+            try{
+                if(arg[0].equals("b")){
+                    out.println(bToG(arg[2]));
+                }
+                if(arg[0].equals("g")){
+                    out.println(arg[2]);
+                }
+            }catch(Exception e){
+                out.println("wrong input, program ended.");
             }
-            if(arg[0].equals("g")){
-                out.println(arg[2]);
-            }
-        }catch(Exception e){
-            out.println("wrong input, program ended.");
         }
         // close IO streams, then socket
         out.close();
