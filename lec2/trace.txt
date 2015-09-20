@@ -1,0 +1,32 @@
+client to proxy which connects to:
+    b-->g (made by us: Student Yi Zhou)
+    b-->in (made by us: Student Zuocheng Ding)
+    b-->lbs (made by us: Student Zhenyu han)
+ 
+Proxy Server stored the Host and port of all Convertion Server. When server got a message from client, it will first
+test the validation of the message. If arguements in messages are all adoptable, then Proxy Server will use BFS to 
+find a path to do the convertion. If the path exist, Proxy Server will send messages to those Convertion Servers, 
+get the result and return it to client.
+
+output from telnet testing session:
+
+    finger92: ~ $ telnet localhost 5556
+    Trying 127.0.0.1...
+    Connected to localhost.
+    Escape character is '^]'.
+    Welcome, you are connected to a Java-based Proxy Server
+    lbs g 5
+    Welcome to the Bananas (b) to Pounds (lbs) conversion server!
+    Welcome to the Bananas (b) to Grams of Potassium (g) conversion server!
+    8.919124
+    Connection closed by foreign host.
+    
+output from proxy server:
+
+    finger92: ~/git/lec2 $ java ProxyServer 5556
+    Started server on port 5556
+     
+    Accepted connection from client
+    Received message: lbs g 5
+    server info: Welcome to the Bananas (b) to Pounds (lbs) conversion server!; return result: 18.8964474679
+    server info: Welcome to the Bananas (b) to Grams of Potassium (g) conversion server!; return result: 8.919124

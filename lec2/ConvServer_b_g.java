@@ -2,8 +2,8 @@
  *
  *  CS 6421 - Simple Conversation
  *  implement convertion between bananas and grams of potassium
- *  Compilation:  javac ConvServer.java
- *  Execution:    java ConvServer port
+ *  Compilation:  javac ConvServer_b_g.java
+ *  Execution:    java ConvServer_b_g port
  *
  *  % java ConvServer portnum
  ******************************************************************************/
@@ -17,7 +17,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.Double;
 
-public class ConvServer {
+public class ConvServer_b_g {
 
     public static void process (Socket clientSocket) throws IOException {
         // open up IO streams
@@ -63,21 +63,21 @@ public class ConvServer {
     }
     
     /**convert number of bananas to grams of potassium*/
-    public static double bToG(String ui) throws Exception{
-        double n = 0.0;
+    public static float bToG(String ui) throws Exception{
+        float n = 0f;
        
-        n = Double.valueOf(ui).doubleValue();
+        n = Float.valueOf(ui).floatValue();
 
-        return n * 0.472;
+        return n * 0.472f;
     }
     
     /**convert grams of potassium to number of bananas*/
-    public static double gToB(String ui) throws Exception{
-        double n = 0.0;
+    public static float gToB(String ui) throws Exception{
+        float n = 0f;
         
-        n = Double.valueOf(ui).doubleValue();
+        n = Float.valueOf(ui).floatValue();
 
-        return n / 0.472;
+        return n / 0.472f;
     }
 
     public static void main(String[] args) throws Exception {
