@@ -176,9 +176,9 @@ public class ProxyServer {
         int j = 0;
         // Exception handler
         if (arg.length != 3){
-            out.println("pls input 3 arguements. Usage: eg. b g 2 or g b 2");
+            out.println("pls input 3 arguements. Usage: eg. lbs g 2 or g lbs 2");
         }else if(!checkArg(arg)){
-            out.print("Wrong input. allowed input unit：");
+            out.print("Wrong input. allowed input units: lbs g b in");
             for(int i = 0;i < getLable.length;i++){
                 out.print(getLable[i]+ " ");
             }
@@ -186,18 +186,22 @@ public class ProxyServer {
         }else{
             // find path, complete convertion, send result
             Node node = findPath(getNum.get(arg[0]), getNum.get(arg[1]));
-            path[j] = node.getNum(); 
-            while(node.getPre() != null){
-                node = node.getPre();
-                j++;
-                path[j] = node.getNum();
-            }
-            
-            String argNum = arg[2];
-            for(int i = j; i > 0; i--){
-                argNum = callServer(getLable[path[i]]+" "+getLable[path[i-1]]+" "+argNum, getServer.get(getLable[path[i]]+" "+getLable[path[i-1]]));
-            }
+            if(node == null){
+                out.println("ERROR, can not find any convertion path between the two units.");
+            }else{
+                path[j] = node.getNum(); 
+                while(node.getPre() != null){
+                    node = node.getPre();
+                    j++;
+                    path[j] = node.getNum();
+                }
+                
+                String argNum = arg[2];
+                for(int i = j; i > 0; i--){
+                    argNum = callServer(getLable[path[i]]+" "+getLable[path[i-1]]+" "+argNum, getServer.get(getLable[path[i]]+" "+getLable[path[i-1]]));
+                }
                 out.println(argNum);
+            }
         }
         // close IO streams, then socket
         out.close();
