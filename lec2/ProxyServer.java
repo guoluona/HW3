@@ -104,30 +104,32 @@ public class ProxyServer {
         getServer.put("g b", bConvg);
     }
     
-    public static String callServer(String msg, String server) {
+    public static String[] callServer(String msg, String server) {
 
         Socket sock = null;
-        String userInput = null;
+        String[] userInput = null;
         try {
             String[] serverArg = server.split(" ");
             sock = new Socket(serverArg[0], Integer.parseInt(serverArg[1]));    //get the socket and connet to the server
             BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));   //get reader
             PrintWriter out = new PrintWriter(sock.getOutputStream(), true);    //get printer
             out.println(msg + "\n");   //send messages
+            userInput = new String[2];
             
-            if ((userInput = in.readLine()) == null) {  //get reply
+            if ((userInput[0] = in.readLine()) == null) {  //get reply
                 System.out.println("Error reading message");
                 out.close();
                 in.close();
                 sock.close();
             }
 
-            System.out.println("Received message: " + userInput);
+            userInput[1] = in.readLine();
+            System.out.println("server info: " + userInput[0] + "; return result: " + userInput[1]);
             out.close();
             in.close();
             sock.close();
         } catch(Exception e) {
-            System.out.println("ERROR:"+e);
+            System.out.println("ERROR:" + e);
             System.exit(-1); 
         }
 
@@ -156,7 +158,7 @@ public class ProxyServer {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
         /* Write a welcome message to the client */
-        out.println("Welcome, you are connected to a Java-based server");
+        out.println("Welcome, you are connected to a Java-based Proxy Server");
 
         /* read and print the client's request */
         // readLine() blocks until the server receives a new line from client
@@ -178,7 +180,7 @@ public class ProxyServer {
         if (arg.length != 3){
             out.println("pls input 3 arguements. Usage: eg. lbs g 2 or g lbs 2");
         }else if(!checkArg(arg)){
-            out.print("Wrong input. allowed input units: lbs g b in");
+            out.print("Wrong input. allowed input units: ");
             for(int i = 0;i < getLable.length;i++){
                 out.print(getLable[i]+ " ");
             }
@@ -198,7 +200,10 @@ public class ProxyServer {
                 
                 String argNum = arg[2];
                 for(int i = j; i > 0; i--){
-                    argNum = callServer(getLable[path[i]]+" "+getLable[path[i-1]]+" "+argNum, getServer.get(getLable[path[i]]+" "+getLable[path[i-1]]));
+                    String[] result = callServer(getLable[path[i]]+" "+getLable[path[i-1]]+" "+argNum, getServer.get(getLable[path[i]]+" "+getLable[path[i-1]]));
+                    out.println(result[0]);
+                    argNum = result[1];
+                    
                 }
                 out.println(argNum);
             }

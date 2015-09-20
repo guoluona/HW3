@@ -25,7 +25,7 @@ public class ConvServer {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
         /* Write a welcome message to the client */
-        // /out.println("Welcome, you are connected to a Java-based server");
+        out.println("Welcome to the Bananas (b) to Grams of Potassium (g) conversion server!");
 
         /* read and print the client's request */
         // readLine() blocks until the server receives a new line from client
@@ -42,8 +42,8 @@ public class ConvServer {
         String[] arg = userInput.split(" ");
         if (arg.length != 3){
             out.println("pls input 3 arguements. Usage: eg. b g 2 or g b 2");
-        }else if(!arg[0].equals("b") && !arg[0].equals("in") || !arg[1].equals("b") && !arg[1].equals("in")){
-            out.println("Wrong input. Usage: eg. b in 2 or in b 2");
+        }else if(!arg[0].equals("b") && !arg[0].equals("g") || !arg[1].equals("b") && !arg[1].equals("g")){
+            out.println("Wrong input. Usage: eg. b g 2 or g b 2");
         }else{
             try{
                 if(arg[0].equals("b")){

@@ -13,7 +13,7 @@ import sys
 
 ## Function to process requests
 def process(conn):
-    #conn.send("Welcome, you are connected to a Python-based server\n")
+    conn.send("Welcome to the Bananas (b) to Pounds (lbs) conversion server!\n")
 
     # read userInput from client
     userInput = conn.recv(BUFFER_SIZE)
