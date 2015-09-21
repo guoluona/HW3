@@ -1,6 +1,1 @@
-<<<<<<< HEAD
-
-
-=======
-# HW3
->>>>>>> 6e28d0134985a9ed4f308a1f5e2e6d230ecdf502
+dist_class homework
