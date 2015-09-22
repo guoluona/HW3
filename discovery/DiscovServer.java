@@ -17,7 +17,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-public class ConvServer_b_g {
+public class DiscovServer {
     
     static String client= "i'm client!";
     static String proxy= "i'm Proxy!";
@@ -29,11 +29,13 @@ public class ConvServer_b_g {
 
         Socket sock = null;
         String[] userInput = null;
+        BufferedReader in = null;
+        PrintWriter out = null;
         try {
             String[] serverArg = server.split(" ");
             sock = new Socket(serverArg[0], Integer.parseInt(serverArg[1]));    //get the socket and connet to the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));   //get reader
-            PrintWriter out = new PrintWriter(sock.getOutputStream(), true);    //get printer
+            in = new BufferedReader(new InputStreamReader(sock.getInputStream()));   //get reader
+            out = new PrintWriter(sock.getOutputStream(), true);    //get printer
             out.println(msg + "\n");   //send messages
             userInput = new String[2];
             
@@ -50,8 +52,7 @@ public class ConvServer_b_g {
             in.close();
             sock.close();
         } catch(Exception e) {
-            System.out.println("ERROR:" + e);
-            System.exit(-1); 
+            out.println("ERROR:" + e);
         }
 
         //System.out.println(msg + " sended.");
@@ -86,7 +87,7 @@ public class ConvServer_b_g {
                 }else if(arg[1].equals("r")){ // when proxy server die, remove its info in discovTable
                     discovTable.remove("proxy");
                 }else if(arg[1].equals("lkup")){ // proxy server ask discverty server for info about host, port info for convertion server
-                     callServer("discov:r_lkup:" + discovTabler.get(arg[2]), discovTabler.get("proxy"));
+                     callServer("discov:r_lkup:" + discovTable.get(arg[2]), discovTable.get("proxy"));
                 }
             }else if(arg[0].equals(conv)){
                 // convertion server
@@ -94,11 +95,11 @@ public class ConvServer_b_g {
                 if(arg[1].equals("a")){ // when convertion server start, add their host, port info to discovTable
                     discovTable.put(msg[0] + " " + msg[1], arg[3]);
                     discovTable.put(msg[1] + " " + msg[0], arg[3]);
-                    callServer("discov:updt_t_a:" + arg[2], discovTabler.get("proxy"));
+                    callServer("discov:updt_t_a:" + arg[2], discovTable.get("proxy"));
                 }else if(arg[1].equals("r")){   // when convertion server die, remove their info in discovTable
                     discovTable.remove(msg[0] + " " + msg[1]);
                     discovTable.remove(msg[1] + " " + msg[0]);
-                    callServer("discov:updt_t_r:" + arg[2], discovTabler.get("proxy"));
+                    callServer("discov:updt_t_r:" + arg[2], discovTable.get("proxy"));
                 }
             }else{
                 // client:
