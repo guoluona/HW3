@@ -55,7 +55,7 @@ def process(conn):
         traceback.print_exc(file=sys.stdout)
         msg = ("Exception occurred: %s\n" % (userInput))
         conn.sendall(msg.encode('UTF-8'))
-        return
+    return
 
 
 if __name__ == '__main__':
